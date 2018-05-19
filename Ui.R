@@ -15,7 +15,7 @@ if (!require(shiny)){install.packages("shiny")}
 
 library("shiny") # Library required to work this APP
 
-shinyUI(
+ui <- shinyUI(
 
     fluidPage(
     
