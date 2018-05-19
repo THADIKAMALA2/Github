@@ -49,7 +49,7 @@ model <- udpipe_download_model(language = "english")
 # Begining of Server component of the Shiny App
 # ------------------------------------------------------------------------------------------------------------
 
-shinyServer(function(input, output) {
+server <- shinyServer(function(input, output) {
   
 # ------------------------------------------------------------------------------------------------------------  
 # Retrieve the dataset selected in ui.R coponent & do basic cleaning of the same  
