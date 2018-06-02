@@ -1,14 +1,20 @@
+
+#------------------------------------------------------------------------
+# Topic: Shiny App to demonstrate UDPipe NLP workflow
 #
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
+# Authors: Shyla Kumar (11910070), Vinayak , Rakesh (11910046),
 #
-# Find out more about building applications with Shiny here:
+# Program / Component: ui.R - It is user interface part of Shiny App
 #
-#    http://shiny.rstudio.com/
+# Date: 19-May-2018
 #
+# ------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------
+# Install & Load the required Libraries
+# ------------------------------------------------------------------------
 
 if (!require(shiny)){install.packages("shiny")}
-library("shiny") # Library required to work this APP
 if (!require(udpipe)){install.packages("udpipe")}
 if (!require(textrank)){install.packages("textrank")}
 if (!require(lattice)){install.packages("lattice")}
@@ -21,6 +27,7 @@ if (!require(tidyverse)) {install.packages("tidyverse")}
 if (!require(tidytext)) {install.packages("tidytext")}
 if (!require(tm)) {install.packages("tm")}
 
+library("shiny")
 library(tidyverse)
 library(tidytext)
 library(udpipe)
@@ -40,7 +47,11 @@ library('tm')
 library(textstem)
 
 
+
+#----------------------------------------------------------------------------------------------------------
 # Define UI for application that draws a histogram
+#----------------------------------------------------------------------------------------------------------
+
 ui <- shinyUI( 
       
   fluidPage(
@@ -51,12 +62,12 @@ ui <- shinyUI(
         
         sidebarPanel(  
           
-          fileInput("file", "Upload text data"),
+          fileInput("file", "Upload text data"), #Input field to load the TXT file 
           
-          radioButtons(inputId = "language", label = "Language Model", choices = c("english")),
+          radioButtons(inputId = "language", label = "Language Model", choices = c("english")), # Radio button to select the language
           
           checkboxGroupInput(inputId = "speech", label = "Universal Parts-of-Speech Tags", choices = c("ADJ", "NOUN", "PROPN", "ADV", "VERB"),selected=c("ADJ","NOUN","PROPN")),
-          downloadButton("download", "Download Annotation")
+          downloadButton("download", "Download Annotation") # Checkbob to select the Parts of Speech
           
         ),   # end of sidebar panel
         
@@ -65,8 +76,10 @@ ui <- shinyUI(
           
           tabsetPanel(type = "tabs",
                       
+                      #Pane to display the instructions to use this Shiny Application
+                      
                       tabPanel("About App",
-                               h4(p("About this Shiny App")),
+                               h4(p(strong("About this Shiny App"))),
                                p("This app is all about a Shiny App to showcase UDPipe NLP Workflow",align="justify"),
                                br(),
                                h4('How to use this App'),
@@ -80,13 +93,19 @@ ui <- shinyUI(
                       ),
                       
                       
+                      # Pane to display the Annotation information
+                      
                       tabPanel("Annotation", 
                                dataTableOutput('plot1')),
                       
+                      # Pane to display the wordcloud(s)
+                                            
                       tabPanel("Word Cloud",
                                plotOutput('cloud')),
+
+                      # Pane to display the Co-occurance
                       
-                      tabPanel("Network Plot",
+                      tabPanel("Network Plot_Co_occurance",
                                plotOutput('co_occ'))
                       
           ) # end of tabsetPanel
@@ -95,8 +114,10 @@ ui <- shinyUI(
     )  # end if fluidPage
 )
 
-
+#--------------------------------------------------------------------------------------------------------------
 # Define server logic required to draw a histogram
+#--------------------------------------------------------------------------------------------------------------
+
 server <- shinyServer(function(input, output) {
   
   model <- udpipe_download_model(language = "english")
@@ -124,7 +145,6 @@ server <- shinyServer(function(input, output) {
     Data_raw_1 <- str_replace_all(Data_raw_0, "[\\s]+", " ")
     
   })
-  
   
   
   # ------------------------------------------------------------------------------------------------------------
@@ -235,8 +255,9 @@ server <- shinyServer(function(input, output) {
   })
   
   
+  # ------------------------------------------------------------------------------------------------------------
   # Code block to handle the download option for Annotation
-  
+  # ------------------------------------------------------------------------------------------------------------
   
   output$download <- downloadHandler(
     
@@ -259,7 +280,9 @@ server <- shinyServer(function(input, output) {
   
 })
 
-
+# ------------------------------------------------------------------------------------------------------------
 # Run the application 
+# ------------------------------------------------------------------------------------------------------------
+
 shinyApp(ui = ui, server = server)
 
